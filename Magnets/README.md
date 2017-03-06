@@ -1,4 +1,4 @@
-A sketch, made with P5js, simulating "magnetic" attraction and repulsion, based on Daniel Shiffman's Coding Challenge #56: Attraction and Repulsion Forces I've turned the attractor object into a magnet object with a boolean property to make it a repeller or an attractor.
+A sketch, made with P5js, simulating "magnetic" attraction and repulsion, based on Daniel Shiffman's Coding Challenge #56: Attraction and Repulsion Forces I've turned the attractor object into a magnet object with a boolean property to make it a repeller or an attractor, depending if you press a key when clicking on the canvas or not.
 
 Shiffman's Video tutorial: https://www.youtube.com/watch?v=OAcXnzRNiCY
 
