@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<!--  -->
+<html>
+
+<head>
+    <meta charset="UTF-8">
+
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 1.6em;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .show {
+            display: inline !important;
+        }
+
+        input[type=button],
+        input[type=submit],
+        input[type=reset] {
+            background-color: black;
+            border: none;
+            color: white;
+            font-size: 1em;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        input[type=text] {
+            width: 280px;
+            padding: 12px 20px;
+            margin: 8px 0;
+            font-size: 1em;
+            box-sizing: border-box;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+            -webkit-transition: width 0.4s ease-in-out;
+            transition: width 0.4s ease-in-out;
+        }
+
+        input[type=text]:focus {
+            border: 3px solid black;
+            width: 100%;
+        }
+    </style>
+
+    <title>Using Parameters With Event Handlers and Listeners</title>
+</head>
+
+<body>
+    <h3>Using Parameters With Event Handlers and Listeners</h3>
+    <p>In event handlers or listener you cannot have parenthesis after the function names. <br/> So how can you pass parameters through the function if you need to? Well, there is a workaround:
+     wrapping the function call in an anonymous function!</p>
+    <input id="myinput" type="text" size="100" placeholder="Type something here"><br/>
+    <input id="submit" type="submit" value="Submit">
+    <p id="dynaP">This paragraph is going to change as soon as you interact with the text input box</p>
+
+    <script>
+        var textbox = document.getElementById('myinput');
+        // doSomething function (which requires arguments) is embedded inside the anonymous function
+        submit.addEventListener('click', function() {
+            var dataEntered = document.getElementById('myinput').value;
+            //console.log("data entered: " + dataEntered);
+            if (dataEntered != "") {
+                doSomething("You have inserted this text: " + dataEntered);
+            } else {
+                doSomething("Yow wrote nothing Jon Snow");
+            }
+            document.getElementById("myinput").value = " ";
+        }, false);
+
+        function doSomething(something) {
+            document.getElementById("dynaP").innerHTML = something;
+        }
+    </script>
+</body>
+
+</html>
