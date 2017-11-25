@@ -15,6 +15,7 @@ function newConnection(socket){
 	//socket.on('shipPosition', shipPosition);
 	socket.on('keypressed', keypressedMsg);
 	socket.on('keyreleased', keyreleasedMsg);
+	socket.on('newAsteroidVector', newAsteroidVectorMsg);
 
 	// function shipPosition(data){
 	// 	//Broadcasts to everyone except the client who sent initial msg
@@ -31,6 +32,11 @@ function newConnection(socket){
 		socket.broadcast.emit('keyreleased', data);
 		//console.log(data);
 	}
+	function newAsteroidVectorMsg(data){
+		
+		socket.broadcast.emit('newAsteroidVector', data);
+	}
+
 }
 
 console.log("Server is now running...");  

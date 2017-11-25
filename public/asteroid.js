@@ -25,6 +25,16 @@ function Asteroid(pos, s) {
   } else {
     this.increment = increment;
   }
+  var data = {
+      //Key codes: left 37, up 38, right 39, down 40, spacebar 32
+       keycode: keyCode,
+       x: ship.pos.x,
+       y: ship.pos.y,
+       heading: ship.heading
+
+    }
+    console.log('Sending: ' + data);
+    socket.emit('keypressed',data);
 }
 
 Asteroid.prototype.explode = function() {
