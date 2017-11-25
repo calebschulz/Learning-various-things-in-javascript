@@ -1,0 +1,30 @@
+{
+  "name": "neutronstars",
+  "version": "1.0.0",
+  "description": "Astroid game server",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calebschulz/neutronStars.git"
+  },
+  "keywords": [
+    "sockets",
+    "p5.js",
+    "node"
+  ],
+  "author": "Caleb Schulz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/calebschulz/neutronStars/issues"
+  },
+  "homepage": "https://github.com/calebschulz/neutronStars#readme"
+}
