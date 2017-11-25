@@ -12,12 +12,14 @@ function Ship() {
   this.danger = false;
   this.safe = true;
   this.score = 0;
-
+  this.red = random(255);
+  this.green = random(255);
+  this.blue = random(255);
 
 }
 Ship.prototype.interface = function(offset) {
   textSize(14);
-  fill(255);
+  fill(this.red,this.green,this.blue);
   noStroke();
   if(offset){
     text("Player 2", 50 + offset, 35);
@@ -144,8 +146,9 @@ Ship.prototype.render = function() {
   } else if (this.safe) {
     stroke(0, 255, 0);
   } else {
-    stroke(255);
+    stroke(this.red,this.green,this.blue);
   }
+
   triangle(-this.r, this.r, this.r, this.r, 0, -this.r);
   pop();
 }

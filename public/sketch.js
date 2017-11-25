@@ -291,8 +291,6 @@ if (ship2.alive) {
        x: ship.pos.x,
        y: ship.pos.y,
        heading: ship.heading
-      //boosting: ship.boosting
-      
 
     }
     console.log('Sending: ' + data);
