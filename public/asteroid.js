@@ -1,4 +1,5 @@
 function Asteroid(pos, s) {
+
   if (pos) {
     this.pos = pos.copy();
   } else {
@@ -27,14 +28,12 @@ function Asteroid(pos, s) {
   }
   var data = {
       //Key codes: left 37, up 38, right 39, down 40, spacebar 32
-       keycode: keyCode,
-       x: ship.pos.x,
-       y: ship.pos.y,
-       heading: ship.heading
-
-    }
-    console.log('Sending: ' + data);
-    socket.emit('keypressed',data);
+       pos: this.pos,
+       vel: this.vel,
+       sides: this.sides
+    } 
+    console.log('Sending new asteroid data: ' + data);
+    socket.emit('New asteroid',data);
 }
 
 Asteroid.prototype.explode = function() {

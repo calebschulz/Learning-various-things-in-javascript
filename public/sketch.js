@@ -18,7 +18,7 @@ var debris = [];
 var energy = [];
 var gameLevel = 0;
 var message;
-var socket;
+var socket;// = io.connect('http://localhost:3000');
 
 function setup() {
   //1500, 750
@@ -28,12 +28,13 @@ function setup() {
   ship2 = new Ship();
   initialize("let's play!", initastnum);
 
-  socket = io.connect('http://192.168.1.141:3000');
+  socket = io.connect('http://localhost:3000');
+
   //socket.on('shipPosition',drawSecondPlayer);
   socket.on('keypressed',secondPlayerKeypressed);
   socket.on('keyreleased',secondPlayerKeyreleased);
 }
-
+ 
 // function drawSecondPlayer(data){
 //   //console.log('Receiving: ' + data);
 //     ship2.pos.x = data.x;

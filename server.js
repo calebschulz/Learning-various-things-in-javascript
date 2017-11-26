@@ -33,8 +33,8 @@ function newConnection(socket){
 		//console.log(data);
 	}
 	function newAsteroidVectorMsg(data){
-		
-		socket.broadcast.emit('newAsteroidVector', data);
+		console.log("Received astroid data:"+data)
+		//socket.broadcast.emit('newAsteroidVector', data);
 	}
 
 }
