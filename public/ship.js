@@ -97,7 +97,7 @@ Ship.prototype.update = function() {
     } else {
       for (var j = asteroids.length - 1; j >= 0; j--) {
         if (this.lasers[i].hits(asteroids[j])) {
-          console.log("asteroid number " + j + " has been hitted! " + asteroids.length);
+          //console.log("asteroid number " + j + " has been hitted! " + asteroids.length);
           var debrisVel = p5.Vector.add(this.lasers[i].vel.mult(0.2), asteroids[j].vel);
           var debrisNum = (asteroids[j].r) * 5;
           generateDebris(asteroids[j].pos, debrisVel, debrisNum); // handeling asteroids explosions
@@ -110,11 +110,11 @@ Ship.prototype.update = function() {
               //console.log("Shupershield!!!!");
               generateEnergy(asteroids[j].pos, debrisVel);
             }
-            asteroids = asteroids.concat(newAsteroids); // concatenating (merging) arrays // https://www.w3schools.com/js/js_array_methods.asp
+            //asteroids = asteroids.concat(newAsteroids); // concatenating (merging) arrays // https://www.w3schools.com/js/js_array_methods.asp
           } else {
             //update the score and do something else
             this.score += 10;
-            console.log(this.score);
+            //console.log(this.score);
           }
           asteroids.splice(j, 1); // removing the hitted asteroid
           this.lasers.splice(i, 1); // removing the laser beam that hitted the target to prevent hitting the newly created smaller asteroids
@@ -137,7 +137,7 @@ Ship.prototype.render = function() {
   rotate(this.heading + PI / 2);
   fill(0);
   if (this.boosting) {
-    console.log("bosting");
+    //console.log("bosting");
     stroke(255, 0, 0);
     line(-this.r + 3, this.r + 3, this.r - 3, this.r + 3);
   }

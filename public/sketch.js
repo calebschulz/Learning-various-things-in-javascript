@@ -18,23 +18,48 @@ var debris = [];
 var energy = [];
 var gameLevel = 0;
 var message;
-var socket;// = io.connect('http://localhost:3000');
+var socket = io.connect('http://localhost:3000');
 
 function setup() {
   //1500, 750
   createCanvas(750, 750);//windowWidth, windowHeight);
   textFont("Courier");
-  ship = new Ship();
+
+  if(typeof(ship) === 'undefined'){
+    ship = new Ship();
+    
+  }
+
+  
   ship2 = new Ship();
   initialize("let's play!", initastnum);
 
-  socket = io.connect('http://localhost:3000');
+  //socket = io.connect('http://localhost:3000');
 
   //socket.on('shipPosition',drawSecondPlayer);
+  socket.on('newAsteroids',newAsteroids);
   socket.on('keypressed',secondPlayerKeypressed);
   socket.on('keyreleased',secondPlayerKeyreleased);
 }
  
+function newAsteroids(data){
+    console.log(data.sides);
+  if(data.sides[0]){
+    console.log('newAsteroids' +1);
+    for(var i = 0; i < data.number; i++){
+      asteroids.push(new Asteroid(data.position[i],data.velocity[i],data.sides[i]));
+    }
+  }
+  else{
+    console.log('newAsteroids' +0);
+    for (var i = 0; i < data.number; i++) {
+      
+      asteroids.push(new Asteroid(data.position[i],data.velocity[i],0));
+    }  
+  }
+  
+}
+
 // function drawSecondPlayer(data){
 //   //console.log('Receiving: ' + data);
 //     ship2.pos.x = data.x;
@@ -160,7 +185,7 @@ if (ship2.alive) {
     astnum += 3;
     initialize("You Win! Level up!", astnum);
   }
-
+  console.log(asteroids.length);
   for (var i = asteroids.length - 1; i >= 0; i--) {
     asteroids[i].render();
     asteroids[i].update();
@@ -215,9 +240,12 @@ if (ship2.alive) {
   }
 
   function basicinit() {
-    for (var i = 0; i < astnum; i++) {
-      asteroids.push(new Asteroid());
-    }
+    //***
+    newAsteroidReq(astnum, 0, 0, 0);
+
+    // for (var i = 0; i < astnum; i++) {
+    //   asteroids.push(new Asteroid());
+    // }
     ship.shieldLevel == 100;
     ship.safe = true;
     //***
