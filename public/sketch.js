@@ -19,50 +19,51 @@ var energy = [];
 var gameLevel = 0;
 var message;
 var initialized = 0;
+var gameStarted = false;
 var socket = io.connect('http://localhost:3000');
+var waitForServerResponse = true;
 
 function setup() {
   //1500, 750
   createCanvas(750, 750);//windowWidth, windowHeight);
   textFont("Courier");
 
-  ship = new Ship();
-  ship2 = new Ship();
   //initialize("let's play!", initastnum);
-  message = 'Waiting for player 2...'
+  message = 'Waiting for player 2...';
   socket.on('initialize',initialize);
+  socket.on('firstInitialize',initialize);
   socket.on('newAsteroids',newAsteroids);
   socket.on('keypressed',secondPlayerKeypressed);
   socket.on('keyreleased',secondPlayerKeyreleased);
 
+  ship = new Ship();
+  ship2 = new Ship();
+
   var data = {
     messageText: "let's play!",
-    newastnum: initastnum
+    newastnum: initastnum,
+    playerNumber: 0
   }
   socket.emit('initialize',data);
 
 }
-
- message = data.messageText;
-    gameLevel += 1;
-    astnum = data.newastnum;
  
 function newAsteroids(data){
     console.log(data.sides);
   if(data.sides[0]){
     console.log('newAsteroids' +1);
     for(var i = 0; i < data.number; i++){
-      asteroids.push(new Asteroid(data.position[i],data.velocity[i],data.sides[i]));
+      asteroids.push(new Asteroid(data.positionX[i],data.positionY[i],data.velocity[i],data.sides[i]));
     }
   }
   else{
     console.log('newAsteroids' +0);
     for (var i = 0; i < data.number; i++) {
       
-      asteroids.push(new Asteroid(data.position[i],data.velocity[i],0));
+      asteroids.push(new Asteroid(data.positionX[i],data.positionY[i],data.velocity[i],0));
     }  
   }
-  
+  waitForServerResponse = false;
 }
 
 
@@ -118,7 +119,7 @@ function draw() {
       debris.splice(i, 1);
     }
   }
-  console.log('Energy:'+energy)
+  //console.log('Energy:'+energy)
   for (var i = energy.length - 1; i >= 0; i--) {
     energy[i].update();
     energy[i].render();
@@ -163,18 +164,19 @@ function draw() {
     //restart();
   };
 
-  if (asteroids.length == 0 && initialized) { // player cleared the level
+  if (asteroids.length == 0 && gameStarted === true && waitForServerResponse === false) { // player cleared the level
     astnum += 3;
     initialized = 0;
     data = {
       messageText: "You Win! Level up!",
-      newastrnum: astnum
+      newastnum: astnum
     }
 
     socket.emit('initialize',data);
     //initialize("You Win! Level up!", astnum);
+    waitForServerResponse === true;
   }
-  console.log(asteroids.length);
+  //console.log(asteroids.length);
   for (var i = asteroids.length - 1; i >= 0; i--) {
     asteroids[i].render();
     asteroids[i].update();
@@ -210,12 +212,36 @@ function draw() {
   ship2.interface(500);
   }
 
-  function initialize(data) {
+  function firstInitialize(data) {
+ //   messageText: "let's play!",
+ //   newastnum: initastnum
+    ship = new Ship();
+    ship2 = new Ship();
     initialized = 1;
-    message = data.messageText;
-    gameLevel += 1;
-    astnum = data.newastnum;
+    message = "let's play!";
+    gameLevel = 1;
+    astnum = newastnum;
     basicinit();
+  }
+
+  function initialize(data) {
+
+    if(gameStarted === false){
+      asteroids = [];
+      if(data.playerNumber === 2){
+        gameStarted = true;
+        message = data.messageText;
+        gameLevel += 1;
+        astnum = data.newastnum;
+        basicinit();
+      }
+    }
+    else{
+      message = data.messageText;
+      gameLevel += 1;
+      astnum = data.newastnum;
+      basicinit();
+    }
   }
 
   // function initialize(messageText, newastnum) {
@@ -237,11 +263,9 @@ function draw() {
 
   function basicinit() {
     //***
+    console.log("Basicinit astnum: ",astnum)
     newAsteroidReq(astnum, 0, 0, 0);
 
-    // for (var i = 0; i < astnum; i++) {
-    //   asteroids.push(new Asteroid());
-    // }
     ship.shieldLevel == 100;
     ship.safe = true;
     //***
@@ -298,15 +322,7 @@ function draw() {
     } else if (keyCode == UP_ARROW) {
       ship.boosting = true;
     } 
-    else if (key == 'À') {
-      ship2.lasers.push(new Laser(ship2.pos, ship2.heading));
-    } else if (key == 'D') {
-      ship2.setRotation(0.1);
-    } else if (key == 'A') {
-      ship2.setRotation(-0.1);
-    } else if (key == 'W') {
-      ship2.boosting = true;
-    }else if (keyCode == ENTER && message == "Game Over") {
+    else if (keyCode == ENTER && message == "Game Over") {
       console.log("DAMN!!");
       restart("let's play again!", initastnum);
     }

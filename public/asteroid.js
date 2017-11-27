@@ -1,5 +1,5 @@
-function Asteroid(pos, vel, s) {
-  console.log(s);
+function Asteroid(posX, posY, vel, s) {
+  console.log('new astroid vel:'+vel);
   // if (pos) {
   //   this.pos = pos.copy();
   // } else {
@@ -9,7 +9,7 @@ function Asteroid(pos, vel, s) {
   //   //Example [618.4054341695382, 150.3956591558591, 0]
   // }
   //console.log('position:'+pos+' velocity:'+vel);
-  this.pos = createVector(pos[0],pos[1]);
+  this.pos = createVector(posX,posY);
 
   this.vel = createVector(vel[0],vel[1]);
 
@@ -39,24 +39,35 @@ console.log('radius: '+this.r);
     this.increment = increment;
   }
 }
-
-
+// works: (astnum, 0, 0, 0)
+//(2, this.pos, 0, this.sides)
 function newAsteroidReq(astnum, pos, vel, s){
-      var number= astnum;
-       var position=[];
-       position.push(pos);
-       var velocity=[];
-       velocity.push(vel);
-       var sides=[];
-       sides.push(s);
+    var number = astnum;
+    var positionX = [];
+    var positionY = [];
+    if(pos === 0){
+      positionX = positionX.concat(pos);
+      positionY = positionY.concat(pos);
+    }
+    else{
+      positionX = positionX.concat(pos.x);
+      positionY = positionY.concat(pos.y);
+    }
+    
+    
+    var velocity=[];
+    velocity = velocity.concat(vel);
+    var sides=[];
+    sides.push(s);
+    console.log('Build astroid data to send to server');
   // var data = {
   //      number: astnum,
   //      position: pos,
   //      velocity: vel,
   //      sides: s
   //   }
-    //console.log('Requesting new Asteroid: ' + data);
-    socket.emit('newAsteroidReq',{number,position,velocity,sides});
+    console.log('Requesting new Asteroid: number:' + number +' position:' +positionX+positionY+' velocity:'+velocity+' Sides:'+sides);
+    socket.emit('newAsteroidReq',{number,positionX,positionY,velocity,sides});
 }
 
 Asteroid.prototype.explode = function() {
@@ -67,10 +78,13 @@ Asteroid.prototype.explode = function() {
 }
 
 Asteroid.prototype.breakup = function() {
+  console.log('Astroid breakup');
   var newA = [];
   if (this.sides > 5) {
+    console.log('Big Astroid breakup');
     newAsteroidReq(2, this.pos, 0, this.sides);
     newA = [1,2];//Dummy array
+    waitForServerResponse = true;
     //newA[0] = new Asteroid(this.pos, this.sides);
     //newA[1] = new Asteroid(this.pos, this.sides);
   }

@@ -110,6 +110,7 @@ Ship.prototype.update = function() {
               //console.log("Shupershield!!!!");
               generateEnergy(asteroids[j].pos, debrisVel);
             }
+
             //asteroids = asteroids.concat(newAsteroids); // concatenating (merging) arrays // https://www.w3schools.com/js/js_array_methods.asp
           } else {
             //update the score and do something else
@@ -118,6 +119,7 @@ Ship.prototype.update = function() {
           }
           asteroids.splice(j, 1); // removing the hitted asteroid
           this.lasers.splice(i, 1); // removing the laser beam that hitted the target to prevent hitting the newly created smaller asteroids
+          waitForServerResponse = true;
           break; // exiting the loop to be safe not checking already removed stuff
         }
       }
