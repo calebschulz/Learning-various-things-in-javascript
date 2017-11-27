@@ -18,6 +18,7 @@ var debris = [];
 var energy = [];
 var gameLevel = 0;
 var message;
+var initialized = 0;
 var socket = io.connect('http://localhost:3000');
 
 function setup() {
@@ -25,22 +26,26 @@ function setup() {
   createCanvas(750, 750);//windowWidth, windowHeight);
   textFont("Courier");
 
-  if(typeof(ship) === 'undefined'){
-    ship = new Ship();
-    
-  }
-
-  
+  ship = new Ship();
   ship2 = new Ship();
-  initialize("let's play!", initastnum);
-
-  //socket = io.connect('http://localhost:3000');
-
-  //socket.on('shipPosition',drawSecondPlayer);
+  //initialize("let's play!", initastnum);
+  message = 'Waiting for player 2...'
+  socket.on('initialize',initialize);
   socket.on('newAsteroids',newAsteroids);
   socket.on('keypressed',secondPlayerKeypressed);
   socket.on('keyreleased',secondPlayerKeyreleased);
+
+  var data = {
+    messageText: "let's play!",
+    newastnum: initastnum
+  }
+  socket.emit('initialize',data);
+
 }
+
+ message = data.messageText;
+    gameLevel += 1;
+    astnum = data.newastnum;
  
 function newAsteroids(data){
     console.log(data.sides);
@@ -60,28 +65,6 @@ function newAsteroids(data){
   
 }
 
-// function drawSecondPlayer(data){
-//   //console.log('Receiving: ' + data);
-//     ship2.pos.x = data.x;
-//     ship2.pos.y = data.y;
-//     ship2.heading = data.heading;
-//     ship2.boosting = data.boosting;
-
-//     // ship2.update();
-//     // ship2.render();
-//     // ship2.edges();
-//     if (data.keycode == 32) {
-//       ship2.lasers.push(new Laser(ship2.pos, ship2.heading));
-//     } else if (data.keycode == RIGHT_ARROW) {
-//       //ship2.setRotation(0.1);
-      
-//     } else if (data.keycode == LEFT_ARROW) {
-//       //ship2.setRotation(-0.1);
-      
-//     } else if (data.keycode == UP_ARROW) {
-//       ship2.boosting = true;
-//     } 
-// }
 
 function secondPlayerKeypressed(data){
   if(ship2.pos.x !== data.x){
@@ -135,7 +118,7 @@ function draw() {
       debris.splice(i, 1);
     }
   }
-
+  console.log('Energy:'+energy)
   for (var i = energy.length - 1; i >= 0; i--) {
     energy[i].update();
     energy[i].render();
@@ -163,13 +146,12 @@ function draw() {
       energy.splice(i, 1);
     };
   }
-//***
-if (ship2.alive) {
-    ship2.update();
-    ship2.render();
-    ship2.edges();
-  }  
 
+  if (ship2.alive) {
+      ship2.update();
+      ship2.render();
+      ship2.edges();
+    }  
 
   if (ship.alive) {
     ship.update();
@@ -181,9 +163,16 @@ if (ship2.alive) {
     //restart();
   };
 
-  if (asteroids.length == 0) { // player cleared the level
+  if (asteroids.length == 0 && initialized) { // player cleared the level
     astnum += 3;
-    initialize("You Win! Level up!", astnum);
+    initialized = 0;
+    data = {
+      messageText: "You Win! Level up!",
+      newastrnum: astnum
+    }
+
+    socket.emit('initialize',data);
+    //initialize("You Win! Level up!", astnum);
   }
   console.log(asteroids.length);
   for (var i = asteroids.length - 1; i >= 0; i--) {
@@ -221,13 +210,20 @@ if (ship2.alive) {
   ship2.interface(500);
   }
 
-
-  function initialize(messageText, newastnum) {
-    message = messageText;
+  function initialize(data) {
+    initialized = 1;
+    message = data.messageText;
     gameLevel += 1;
-    astnum = newastnum;
+    astnum = data.newastnum;
     basicinit();
   }
+
+  // function initialize(messageText, newastnum) {
+  //   message = messageText;
+  //   gameLevel += 1;
+  //   astnum = newastnum;
+  //   basicinit();
+  // }
 
   function restart(messageText, newastnum) {
     ship.init();

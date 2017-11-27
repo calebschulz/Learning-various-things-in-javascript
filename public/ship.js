@@ -97,7 +97,7 @@ Ship.prototype.update = function() {
     } else {
       for (var j = asteroids.length - 1; j >= 0; j--) {
         if (this.lasers[i].hits(asteroids[j])) {
-          //console.log("asteroid number " + j + " has been hitted! " + asteroids.length);
+          console.log("asteroid number " + j + " has been hitted! " + asteroids.length);
           var debrisVel = p5.Vector.add(this.lasers[i].vel.mult(0.2), asteroids[j].vel);
           var debrisNum = (asteroids[j].r) * 5;
           generateDebris(asteroids[j].pos, debrisVel, debrisNum); // handeling asteroids explosions
