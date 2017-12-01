@@ -12,9 +12,9 @@ function Ship() {
   this.danger = false;
   this.safe = true;
   this.score = 0;
-  this.red = random(255);
-  this.green = random(255);
-  this.blue = random(255);
+  this.red = 7;//109;//random(255);
+  this.green = 71;//3;//random(255);
+  this.blue = 109;//3;//random(255);
 
 }
 Ship.prototype.interface = function(offset) {

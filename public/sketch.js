@@ -166,7 +166,7 @@ function draw() {
     //restart();
   };
 
-  if (asteroids.length == 0 && gameStarted === true && waitForServerResponse === false) { // player cleared the level
+  if (asteroids.length === 0 && gameStarted === true && waitForServerResponse === false) { // player cleared the level
     astnum += 3;
     initialized = 0;
     data = {
@@ -229,6 +229,22 @@ function draw() {
   function playerInitialize(data){
     console.log('Client initialized as player '+data.playerId);
     playerId = data.playerId;
+    if(playerId === 1){
+      ship.red = 13;
+      ship.green = 125;
+      ship.blue = 191;
+      ship2.red = 144;
+      ship2.green = 191;
+      ship2.blue = 150;
+    }
+    else if(playerId === 2){
+      ship.red = 144;
+      ship.green = 191;
+      ship.blue = 150;
+      ship2.red = 13;
+      ship2.green = 125;
+      ship2.blue =  191;
+    }
   }
 
   function initialize(data) {
