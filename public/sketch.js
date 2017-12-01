@@ -22,6 +22,7 @@ var initialized = 0;
 var gameStarted = false;
 var socket = io.connect('http://localhost:3000');
 var waitForServerResponse = true;
+var playerId;
 
 function setup() {
   //1500, 750
@@ -35,9 +36,9 @@ function setup() {
   socket.on('newAsteroids',newAsteroids);
   socket.on('keypressed',secondPlayerKeypressed);
   socket.on('keyreleased',secondPlayerKeyreleased);
-
+  socket.on('playerInitialize', playerInitialize);
   ship = new Ship();
-  ship2 = new Ship();
+  ship2 = new Ship(); 
 
   var data = {
     messageText: "let's play!",
@@ -93,7 +94,7 @@ function secondPlayerKeypressed(data){
   } 
 }
 function secondPlayerKeyreleased(data){
-  console.log('key realeased' + data)
+  console.log('key keyreleased' + data)
   if(ship2.pos.x !== data.x){
     ship2.pos.x = data.x; 
   }
@@ -105,9 +106,10 @@ function secondPlayerKeyreleased(data){
   }
   if (data.keycode == RIGHT_ARROW || data.keycode == LEFT_ARROW) {
         ship2.setRotation(0);
-      } else if (data.keycode == UP_ARROW) {
-        ship2.boosting = false;
-      }
+  } 
+  else if (data.keycode == UP_ARROW) {
+    ship2.boosting = false;
+  }
 }
 
 function draw() {
@@ -224,9 +226,14 @@ function draw() {
     basicinit();
   }
 
-  function initialize(data) {
+  function playerInitialize(data){
+    console.log('Client initialized as player '+data.playerId);
+    playerId = data.playerId;
+  }
 
-    if(gameStarted === false){
+  function initialize(data) {
+    console.log('')
+    if(gameStarted === false || data.gameReset === true){
       asteroids = [];
       if(data.playerNumber === 2){
         gameStarted = true;
@@ -235,6 +242,7 @@ function draw() {
         astnum = data.newastnum;
         basicinit();
       }
+
     }
     else{
       message = data.messageText;
@@ -287,12 +295,6 @@ function draw() {
       ship.setRotation(0);
     } else if (keyCode == UP_ARROW) {
       ship.boosting = false;
-    }
-
-    else if (key == 'D' || key == 'A') {
-      ship2.setRotation(0);
-    } else if (key == 'W') {
-      ship2.boosting = false;
     }
 
     var data = {

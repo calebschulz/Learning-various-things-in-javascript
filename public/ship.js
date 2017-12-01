@@ -18,15 +18,27 @@ function Ship() {
 
 }
 Ship.prototype.interface = function(offset) {
+ 
   textSize(14);
   fill(this.red,this.green,this.blue);
   noStroke();
-  if(offset){
-    text("Player 2", 50 + offset, 35);
+  if(playerId === 1){
+    if(offset){
+      text("Player 2", 50 + 500, 35);
+    }
+    else{
+      text("Player 1", 50, 35);
+    }
   }
-  else{
-    text("Player 1", 50, 35)
+  else if(playerId === 2){
+    if(offset){
+      text("Player 1", 50 + 500, 35);
+    }
+    else{
+      text("Player 2", 50 , 35);
+    }
   }
+  
   text("Score = " + this.score, 50+offset, 50);
   //text("Shield = " + constrain(round(ship.shieldLevel), 0, 100), 50, 65);
   if (this.shieldLevel >= this.shieldMax) {
@@ -112,7 +124,8 @@ Ship.prototype.update = function() {
             }
 
             //asteroids = asteroids.concat(newAsteroids); // concatenating (merging) arrays // https://www.w3schools.com/js/js_array_methods.asp
-          } else {
+          } 
+          else {
             //update the score and do something else
             this.score += 10;
             //console.log(this.score);

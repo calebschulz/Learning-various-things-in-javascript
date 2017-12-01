@@ -9,23 +9,32 @@ io.sockets.on('connection', newConnection);
 
 var currentPlayers = [];
 var gameStarted = false;
+var resetGame = true;
 
 function newConnection(socket){
 	console.log('new connection: '+ socket.id);
 	if(currentPlayers.length < 2){
 		currentPlayers.push(socket.id);
 		console.log('Player '+currentPlayers.length+' connected.')
+		var data = {
+			//Tell cliente if they are player 1 or 2
+			playerId: currentPlayers.length
+		}
+		socket.emit('playerInitialize', data);
 	}
 	else{
 		console.log('More than 2 players connected');
 	}
+	console.log('player number:' + currentPlayers.length);
 	if(currentPlayers.length === 2 && gameStarted === false){
 	  console.log('Initializing game');
 	  var data = {
 	    messageText: "let's play!",
 	    newastnum: 2,
-	    firstInit: true
+	    firstInit: true,
+	    resetGame: true
 	  }
+	  console.log('initial init**'+data.resetGame);
 		io.sockets.emit('initialize',data);
 	}
 	
@@ -47,12 +56,14 @@ function newConnection(socket){
 				data.playerNumber = 1;
 			}
 			if(currentPlayers.length === 2){ 
-				data.playerNumber = 2;				
+				data.playerNumber = 2;
+				gameStarted = true;				
 			}
 		}
 		io.sockets.emit('initialize',data);
 	}
 	function userDisconnect(){
+		console.log('User Disconnected: ' + this.id);
 		if(this.id === currentPlayers[0]){
 			if(currentPlayers.length === 2){
 				currentPlayers.splice(0,1);
@@ -60,7 +71,7 @@ function newConnection(socket){
 			else{
 				currentPlayers.length = 0;	
 			}
-			gameStarted = false;
+			gameStarted = false;	
 		}
 		else if(this.id === currentPlayers[1]){
 			currentPlayers.pop();
@@ -79,32 +90,34 @@ function newConnection(socket){
 		//console.log(data);
 	}
 	function newAsteroidReq(data){
-		console.log("Received astroid data:"+data);
-		//*** set to demo screen size
+		if(gameStarted === true){
+			console.log("Received astroid data:"+data);
+			//*** set to demo screen size
 
-		if(this.id === currentPlayers[0]){ //only first player controls asteroid creation
-			let tempPosX = data.positionX.pop();
-			let tempPosY = data.positionY.pop();
-			let tempVel = data.velocity.pop();
-			let tempS = data.sides.pop();
-			if(tempS){
-				for(var i=0; i<data.number; i++){
-					data.positionX.push(tempPosX);//data.position[i] = tempPos;
-					data.positionY.push(tempPosY);//data.position[i] = tempPos;
-					data.velocity.push([Math.random()*(Math.round(Math.random()) * 2 - 1),Math.random()*(Math.round(Math.random()) * 2 - 1), 0]);//data.velocity[i] = tempVel;
-					data.sides.push(tempS);//data.sides[i] = tempS;
+			if(this.id === currentPlayers[0]){ //only first player controls asteroid creation
+				let tempPosX = data.positionX.pop();
+				let tempPosY = data.positionY.pop();
+				let tempVel = data.velocity.pop();
+				let tempS = data.sides.pop();
+				if(tempS){
+					for(var i=0; i<data.number; i++){
+						data.positionX.push(tempPosX);//data.position[i] = tempPos;
+						data.positionY.push(tempPosY);//data.position[i] = tempPos;
+						data.velocity.push([Math.random()*(Math.round(Math.random()) * 2 - 1),Math.random()*(Math.round(Math.random()) * 2 - 1), 0]);//data.velocity[i] = tempVel;
+						data.sides.push(tempS);//data.sides[i] = tempS;
+					}
 				}
-			}
-			else{
-				for(var i=0; i < data.number; i++){
-					data.positionX.push(Math.random()*750);
-					data.positionY.push(Math.random()*750);
-					data.velocity.push([Math.random()*(Math.round(Math.random()) * 2 - 1),Math.random()*(Math.round(Math.random()) * 2 - 1), 0]);
-					data.sides.push(Math.floor(Math.random()*(30-15)+15));
+				else{
+					for(var i=0; i < data.number; i++){
+						data.positionX.push(Math.random()*750);
+						data.positionY.push(Math.random()*750);
+						data.velocity.push([Math.random()*(Math.round(Math.random()) * 2 - 1),Math.random()*(Math.round(Math.random()) * 2 - 1), 0]);
+						data.sides.push(Math.floor(Math.random()*(30-15)+15));
+					}
 				}
+				console.log('number'+data.number);
+				io.sockets.emit('newAsteroids', data);
 			}
-			console.log('number'+data.number);
-			io.sockets.emit('newAsteroids', data);
 		}
 	}
 }
