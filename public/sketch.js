@@ -21,6 +21,7 @@ var message;
 var initialized = 0;
 var gameStarted = false;
 var socket = io.connect('http://localhost:3000');
+console.log('WaitforServer init true');
 var waitForServerResponse = true;
 var playerId;
 
@@ -64,6 +65,7 @@ function newAsteroids(data){
       asteroids.push(new Asteroid(data.positionX[i],data.positionY[i],data.velocity[i],0));
     }  
   }
+  console.log('WaitforServer newAstroid f false');
   waitForServerResponse = false;
 }
 
@@ -166,6 +168,7 @@ function draw() {
     //restart();
   };
 
+  console.log('Nextlevel?'+asteroids.length+' '+gameStarted+' '+waitForServerResponse);
   if (asteroids.length === 0 && gameStarted === true && waitForServerResponse === false) { // player cleared the level
     astnum += 3;
     initialized = 0;
@@ -176,6 +179,7 @@ function draw() {
 
     socket.emit('initialize',data);
     //initialize("You Win! Level up!", astnum);
+    console.log('WaitforServer ast = 0 gameStarted=true f true');
     waitForServerResponse === true;
   }
   //console.log(asteroids.length);

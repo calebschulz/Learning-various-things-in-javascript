@@ -12,9 +12,9 @@ function Ship() {
   this.danger = false;
   this.safe = true;
   this.score = 0;
-  this.red = 7;//109;//random(255);
-  this.green = 71;//3;//random(255);
-  this.blue = 109;//3;//random(255);
+  this.red = random(255);
+  this.green = random(255);
+  this.blue = random(255);
 
 }
 Ship.prototype.interface = function(offset) {
@@ -132,7 +132,8 @@ Ship.prototype.update = function() {
           }
           asteroids.splice(j, 1); // removing the hitted asteroid
           this.lasers.splice(i, 1); // removing the laser beam that hitted the target to prevent hitting the newly created smaller asteroids
-          waitForServerResponse = true;
+          console.log('WaitforServer ship splice true');
+          //waitForServerResponse = true;
           break; // exiting the loop to be safe not checking already removed stuff
         }
       }

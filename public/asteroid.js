@@ -84,10 +84,12 @@ Asteroid.prototype.breakup = function() {
     console.log('Big Astroid breakup');
     newAsteroidReq(2, this.pos, 0, this.sides);
     newA = [1,2];//Dummy array
+    console.log('WaitforServer breakup f true');
     waitForServerResponse = true;
     //newA[0] = new Asteroid(this.pos, this.sides);
     //newA[1] = new Asteroid(this.pos, this.sides);
   }
+  waitForServerResponse = false;
   return newA; // returning the array with my new asteroids
 }
  
