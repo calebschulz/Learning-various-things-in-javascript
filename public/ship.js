@@ -40,7 +40,6 @@ Ship.prototype.interface = function(offset) {
   }
   
   text("Score = " + this.score, 50+offset, 50);
-  //text("Shield = " + constrain(round(ship.shieldLevel), 0, 100), 50, 65);
   if (this.shieldLevel >= this.shieldMax) {
     text("Shield = Max!", 50+offset, 65);
   } else {
@@ -86,7 +85,6 @@ Ship.prototype.getBonus = function() {
 
 Ship.prototype.explode = function() {
   var debrisVel = p5.Vector.random2D().mult(random(0.5, 1.5));
-  //var debrisVel = p5.Vector.add(this.lasers[i].vel.mult(0.2), asteroids[j].vel);
   var debrisNum = 50;
   generateDebris(this.pos, debrisVel, debrisNum); // handeling ship explosion
   this.alive = false;
@@ -115,15 +113,11 @@ Ship.prototype.update = function() {
           generateDebris(asteroids[j].pos, debrisVel, debrisNum); // handeling asteroids explosions
           var newAsteroids = asteroids[j].breakup(); // returns an array of two smaller asteroids
           if (newAsteroids.length > 0) {
-            //console.log(newAsteroids);
-            //asteroids.push(newAsteroids[0]); //asteroids.push(newAsteroids[1]);
             var probability = random() * 100;
             if (probability > 80) {
               //console.log("Shupershield!!!!");
               generateEnergy(asteroids[j].pos, debrisVel);
             }
-
-            //asteroids = asteroids.concat(newAsteroids); // concatenating (merging) arrays // https://www.w3schools.com/js/js_array_methods.asp
           } 
           else {
             //update the score and do something else

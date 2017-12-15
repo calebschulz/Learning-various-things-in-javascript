@@ -4,6 +4,7 @@ var socket = require('socket.io');
 var app = express();
 var server = app.listen(3000);
 app.use(express.static('public'));
+
 var io = socket(server);
 io.sockets.on('connection', newConnection);
 
@@ -13,6 +14,8 @@ var resetGame = true;
 
 function newConnection(socket){
 	console.log('new connection: '+ socket.id);
+
+	//If connection is the first or second client, tell them which player they are
 	if(currentPlayers.length < 2){
 		currentPlayers.push(socket.id);
 		console.log('Player '+currentPlayers.length+' connected.')
@@ -26,6 +29,8 @@ function newConnection(socket){
 		console.log('More than 2 players connected');
 	}
 	console.log('player number:' + currentPlayers.length);
+
+	//If there is now 2 players, tell clients to start game
 	if(currentPlayers.length === 2 && gameStarted === false){
 	  console.log('Initializing game');
 	  var data = {
@@ -38,18 +43,13 @@ function newConnection(socket){
 		io.sockets.emit('initialize',data);
 	}
 	
-	//socket.on('shipPosition', shipPosition);
 	socket.on('keypressed', keypressedMsg);
 	socket.on('keyreleased', keyreleasedMsg);
 	socket.on('newAsteroidReq', newAsteroidReq);
 	socket.on('initialize', initialize);
 	socket.on('disconnect', userDisconnect);
 
-	// function shipPosition(data){
-	// 	//Broadcasts to everyone except the client who sent initial msg
-	// 	socket.broadcast.emit('shipPosition', data);
-	// 	//console.log(data);
-	// }
+	//Used for initializing a new level
 	function initialize(data){
 		if(gameStarted === false){
 			if(currentPlayers.length === 1){
@@ -62,6 +62,8 @@ function newConnection(socket){
 		}
 		io.sockets.emit('initialize',data);
 	}
+
+	//Removes players when they disconnect
 	function userDisconnect(){
 		console.log('User Disconnected: ' + this.id);
 		if(this.id === currentPlayers[0]){
@@ -79,6 +81,8 @@ function newConnection(socket){
 		}
 
 	}
+
+	//Forwards key press/release events to other player
 	function keypressedMsg(data){
 		//Broadcasts to everyone except the client who sent initial msg
 		socket.broadcast.emit('keypressed', data);
@@ -89,10 +93,11 @@ function newConnection(socket){
 		socket.broadcast.emit('keyreleased', data);
 		//console.log(data);
 	}
+
+	//Generate info for new asteroids
 	function newAsteroidReq(data){
 		if(gameStarted === true){
 			console.log("Received astroid data:"+data);
-			//*** set to demo screen size
 
 			if(this.id === currentPlayers[0]){ //only first player controls asteroid creation
 				let tempPosX = data.positionX.pop();

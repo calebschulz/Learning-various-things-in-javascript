@@ -1,26 +1,14 @@
 function Asteroid(posX, posY, vel, s) {
   console.log('new astroid vel:'+vel);
-  // if (pos) {
-  //   this.pos = pos.copy();
-  // } else {
-  //   this.pos = createVector(random(width), random(height));
 
-
-  //   //Example [618.4054341695382, 150.3956591558591, 0]
-  // }
-  //console.log('position:'+pos+' velocity:'+vel);
   this.pos = createVector(posX,posY);
 
   this.vel = createVector(vel[0],vel[1]);
 
-  //this.vel = p5.Vector.random2D();
-  
-  //Example[0.9464429443608051, -0.32287110906621863, 0]
-  //this.sides = 5;//floor(random(15, 30)) ;
   if (s) {
     this.sides = floor(s * 0.5);
   } else {
-    this.sides = s;//floor(random(15, 30));
+    this.sides = s;
   }
 console.log('sides: '+this.sides);
   this.rmin = 20;
@@ -29,7 +17,7 @@ console.log('sides: '+this.sides);
 console.log('radius: '+this.r);
   this.offset = [];
   for (var i = 0; i < this.sides; i++) {
-    this.offset[i] = random(-5, 5); // alternative // -this.r/8, this.r/8
+    this.offset[i] = random(-5, 5); 
   }
   this.angle = 0;
   var increment = map(this.r, this.rmin, this.rmax, 0.1, 0.01);
@@ -39,8 +27,7 @@ console.log('radius: '+this.r);
     this.increment = increment;
   }
 }
-// works: (astnum, 0, 0, 0)
-//(2, this.pos, 0, this.sides)
+
 function newAsteroidReq(astnum, pos, vel, s){
     var number = astnum;
     var positionX = [];
@@ -60,18 +47,12 @@ function newAsteroidReq(astnum, pos, vel, s){
     var sides=[];
     sides.push(s);
     console.log('Build astroid data to send to server');
-  // var data = {
-  //      number: astnum,
-  //      position: pos,
-  //      velocity: vel,
-  //      sides: s
-  //   }
+
     console.log('Requesting new Asteroid: number:' + number +' position:' +positionX+positionY+' velocity:'+velocity+' Sides:'+sides);
     socket.emit('newAsteroidReq',{number,positionX,positionY,velocity,sides});
 }
 
 Asteroid.prototype.explode = function() {
-  //var debrisVel = p5.Vector.random2D().mult(random(0.5, 1.5));
   var debrisVel = this.vel.copy();
   var debrisNum = this.r * 5;
   generateDebris(this.pos, debrisVel, debrisNum); // handeling ship explosion
@@ -86,8 +67,6 @@ Asteroid.prototype.breakup = function() {
     newA = [1,2];//Dummy array
     console.log('WaitforServer breakup f true');
     waitForServerResponse = true;
-    //newA[0] = new Asteroid(this.pos, this.sides);
-    //newA[1] = new Asteroid(this.pos, this.sides);
   }
   waitForServerResponse = false;
   return newA; // returning the array with my new asteroids
@@ -104,7 +83,6 @@ Asteroid.prototype.render = function() {
   rotate(this.angle);
   noFill();
   stroke(255);
-  //ellipse(0, 0, this.r*2, this.r*2);
   beginShape();
   for (var i = 0; i < this.sides; i++) {
     var angle = map(i, 0, this.sides, 0, TWO_PI);

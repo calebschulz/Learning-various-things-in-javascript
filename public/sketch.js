@@ -1,16 +1,5 @@
-// window.requestAnimationFrame = (function(){
-//     return  window.requestAnimationFrame       ||
-//             window.webkitRequestAnimationFrame ||
-//             window.mozRequestAnimationFrame    ||
-//             window.oRequestAnimationFrame      ||
-//             window.msRequestAnimationFrame     ||
-//             function (callback) {
-//                 window.setTimeout(callback, 1000/60);
-//             };
-// })();
-
-var ship;
-var ship2;
+var ship; //Player 1
+var ship2; //Player 2
 var asteroids = [];
 var astnum;
 var initastnum = 2;
@@ -26,11 +15,9 @@ var waitForServerResponse = true;
 var playerId;
 
 function setup() {
-  //1500, 750
+
   createCanvas(750, 750);//windowWidth, windowHeight);
   textFont("Courier");
-
-  //initialize("let's play!", initastnum);
   message = 'Waiting for player 2...';
   socket.on('initialize',initialize);
   socket.on('firstInitialize',initialize);
@@ -219,8 +206,6 @@ function draw() {
   }
 
   function firstInitialize(data) {
- //   messageText: "let's play!",
- //   newastnum: initastnum
     ship = new Ship();
     ship2 = new Ship();
     initialized = 1;
@@ -272,13 +257,6 @@ function draw() {
     }
   }
 
-  // function initialize(messageText, newastnum) {
-  //   message = messageText;
-  //   gameLevel += 1;
-  //   astnum = newastnum;
-  //   basicinit();
-  // }
-
   function restart(messageText, newastnum) {
     ship.init();
     gameLevel = 1;
@@ -290,19 +268,16 @@ function draw() {
   }
 
   function basicinit() {
-    //***
     console.log("Basicinit astnum: ",astnum)
     newAsteroidReq(astnum, 0, 0, 0);
 
     ship.shieldLevel == 100;
     ship.safe = true;
-    //***
     ship2.shieldLevel == 100;
     ship2.safe = true;
 
     setTimeout(function() {
       ship.safe = false;
-      //***
       ship2.safe = false;
       message = "";
     }, 4000);
@@ -332,8 +307,6 @@ function draw() {
 
 
   function keyPressed() {
-    // var key_press = String.fromCharCode(event.keyCode);
-    // alert(event.keyCode+" | "+key_press);
 
     if (key == ' ') {
       ship.lasers.push(new Laser(ship.pos, ship.heading));
@@ -359,25 +332,3 @@ function draw() {
     console.log('Sending: ' + data);
     socket.emit('keypressed',data);
   }
-
-// function mainLoop(){
-//   //console.log('timestamp: '+timestamp);
-//   // Throttle the frame rate.    
-//     // if (timestamp < lastFrameTimeMs + (1000 / maxFPS)) {
-//     //     requestAnimationFrame(mainLoop);
-//     //     return;
-//     // }
-//     // lastFrameTimeMs = timestamp;
-
-//   var data = {
-//       //Key codes: left 37, up 38, right 39, down 40, spacebar 32
-//       x: ship.pos.x,
-//       y: ship.pos.y,
-//       heading: ship.heading,
-//       boosting: ship.boosting
-
-//     }
-//     socket.emit('shipPosition',data);
-// requestAnimationFrame(mainLoop);
-// }
-
