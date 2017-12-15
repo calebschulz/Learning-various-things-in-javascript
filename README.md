@@ -1,5 +1,5 @@
 # Co-op Astroid Shooter Game
-This is a project that was done for the CENG 356 class at the University of Victoria. This project takes a single player game created by [SteupandDraw](https://github.com/SetupandDraw) and adds a server that allows two players to play it cooperatively.
+This is a project that was done for the CENG 356 class at the University of Victoria. This project takes a single player game created by [SetupandDraw](https://github.com/SetupandDraw) and adds a server that allows two players to play it cooperatively.
 
 ## How to play
 1. Ensure you have Node install on your machine (v8.6 was used in development)
